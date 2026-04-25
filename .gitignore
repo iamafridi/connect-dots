@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Production builds
+dist/
+dist-ssr/
+build/
+*.tsbuildinfo
+
+# Environment configurations & local keys
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+!.env.example
+
+# Logs and runtime diagnostics
+logs/*
+!logs/.gitkeep
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# AI tools, LLM assistants, chat agents & IDE metadata
+.agents/
+.gemini/
+.claude/
+.chat/
+.cursor/
+.cursorrules
+.cline/
+.windsurf/
+.windsurfrules
+.aider*
+.copilot/
+.github/copilot-instructions.md
+.continue/
+*.prompt.md
+.tmp-ui-check/
+.specstory/
+.history/
+
+# Testing & Coverage
+coverage/
+.nyc_output/
+
+# Editor and OS system artifacts
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+
+# Vercel deployment artifacts
+.vercel/
