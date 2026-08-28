@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ConnectDots — Shorten links at light speed</title>
+    <meta
+      name="description"
+      content="ConnectDots is a production-grade URL shortener built entirely from scratch on Node.js — load-tested to 800,000+ requests per second and tuned to absorb 40 million requests a month."
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#101315" />
+    <script>
+      // Apply the stored theme before first paint to avoid a flash of the
+      // wrong palette. Dark is the default when nothing is stored. A
+      // ?theme=light|dark query param wins for one page view (QA/linking)
+      // and is never written back to storage.
+      try {
+        var q = new URLSearchParams(location.search).get("theme");
+        document.documentElement.dataset.theme =
+          q === "light" || q === "dark"
+            ? q
+            : localStorage.getItem("connectdots-theme") === "light"
+              ? "light"
+              : "dark";
+      } catch (e) {
+        document.documentElement.dataset.theme = "dark";
+      }
+    </script>
+    <meta property="og:title" content="ConnectDots — Shorten links at light speed" />
+    <meta
+      property="og:description"
+      content="A production-grade URL shortener built from scratch on Node.js. 800k+ RPS. 40M+ requests a month. MIT licensed."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300..800;1,400&family=JetBrains+Mono:ital,wght@0,300..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
