@@ -1,0 +1,73 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-connectdots}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-connectdots}
+      POSTGRES_DB: ${DB_DATABASE:-connectdots}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-connectdots} -d ${DB_DATABASE:-connectdots}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  app:
+    build:
+      context: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-connectdots}
+      DB_PASSWORD: ${DB_PASSWORD:-connectdots}
+      DB_DATABASE: ${DB_DATABASE:-connectdots}
+      REDIS_URL: redis://redis:6379
+      PORT: 2080
+      REDIS: ${REDIS:-true}
+      COOKIE_KEY: ${COOKIE_KEY:?COOKIE_KEY is required}
+      TOKEN_SECRET: ${TOKEN_SECRET:?TOKEN_SECRET is required}
+    ports:
+      - "${PORT:-2080}:2080"
+
+  janitor:
+    build:
+      context: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-connectdots}
+      DB_PASSWORD: ${DB_PASSWORD:-connectdots}
+      DB_DATABASE: ${DB_DATABASE:-connectdots}
+      REDIS_URL: redis://redis:6379
+      REDIS: ${REDIS:-true}
+      COOKIE_KEY: ${COOKIE_KEY:?COOKIE_KEY is required}
+      TOKEN_SECRET: ${TOKEN_SECRET:?TOKEN_SECRET is required}
+    command: ["node", "dist/janitor.js"]
+
+volumes:
+  postgres-data:
